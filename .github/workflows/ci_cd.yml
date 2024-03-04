@@ -26,9 +26,9 @@ jobs:
       - name: Deploy to Nginx server
         uses: easingthemes/ssh-deploy@v2.2.3
         with:
-          server: 143.198.216.248
-          username: root
-          password: SAfwan@1234s
+          server: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASS }}
           local_path: ./dist/my-first-angular-app/
           server_path: /var/www/html/
           
