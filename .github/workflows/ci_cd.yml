@@ -32,7 +32,8 @@ jobs:
           REMOTE_PORT: 22
           SOURCE: ./dist/my-app/
           TARGET: /var/www/html/
-          ARGS: '-rltgoDzvO --exclude= --delete -e "ssh -o StrictHostKeyChecking=no"'
+          ARGS: "-rltgoDzvO -o StrictHostKeyChecking=no" -e "ssh -p 22 -i /home/runner/.ssh/deploy_key" 143.198.216.248:/var/www/html/ ./dist/my-app/
+
 
 
       - name: Restart Nginx
