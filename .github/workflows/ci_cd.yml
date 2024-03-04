@@ -4,7 +4,6 @@ on:
   push:
     branches: ["master"]
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,6 +11,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -33,5 +33,4 @@ jobs:
           server_path: /var/www/html/
           
       - name: Restart Nginx
-        run: ssh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "sudo systemctl restart nginx"
-          
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo systemctl restart nginx"
