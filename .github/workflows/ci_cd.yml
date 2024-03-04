@@ -1,10 +1,39 @@
-- name: Deploy to Nginx server
-  uses: easingthemes/ssh-deploy@v2.2.3
-  with:
-    SSH_PRIVATE_KEY: ${{ secrets.SSH_PASS }}
-    REMOTE_HOST: 143.198.216.248
-    REMOTE_USER: root
-    REMOTE_PORT: 22
-    SOURCE: ./dist/my-app/
-    TARGET: /var/www/html/
-    ARGS: '-rltgoDzvO --exclude= --delete -e "ssh -o StrictHostKeyChecking=no"'
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: ["master"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build --prod
+
+      - name: Deploy to Nginx server
+        uses: easingthemes/ssh-deploy@v2.2.3
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PASS }}
+          REMOTE_HOST: 143.198.216.248
+          REMOTE_USER: root
+          REMOTE_PORT: 22
+          SOURCE: ./dist/my-app/
+          TARGET: /var/www/html/
+          ARGS: '-rltgoDzvO --exclude= --delete -e "ssh -o StrictHostKeyChecking=no"'
+
+
+      - name: Restart Nginx
+        run: ssh root@143.198.216.248 "sudo systemctl restart nginx"
