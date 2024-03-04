@@ -32,8 +32,7 @@ jobs:
           REMOTE_PORT: 22
           SOURCE: ./dist/my-app/
           TARGET: /var/www/html/
-          ARGS: -rltgoDzvO
-          SSH_KEY_OPTIONS: -o StrictHostKeyChecking=no
+          ARGS: -rltgoDzvO -o StrictHostKeyChecking=no
 
       - name: Restart Nginx
         run: ssh root@143.198.216.248 "sudo systemctl restart nginx"
