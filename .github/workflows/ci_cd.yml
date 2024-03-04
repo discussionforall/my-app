@@ -26,12 +26,14 @@ jobs:
       - name: Deploy to Nginx server
         uses: easingthemes/ssh-deploy@v2.2.3
         with:
-          server: 143.198.216.248
-          username: root
-          password: SAfwan@1234s
-          local_path: ./dist/my-app/
-          server_path: /var/www/html/
-          
+          SSH_PRIVATE_KEY: SAfwan@1234s
+          REMOTE_HOST: 143.198.216.248
+          REMOTE_USER: root
+          REMOTE_PORT: 22
+          SOURCE: ./dist/my-app/
+          TARGET: /var/www/html/
+          ARGS: -rltgoDzvO
+
       - name: Restart Nginx
         run: ssh root@143.198.216.248 "sudo systemctl restart nginx"
 
