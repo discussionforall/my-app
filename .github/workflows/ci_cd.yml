@@ -26,9 +26,9 @@ jobs:
       - name: Deploy to Nginx server
         uses: easingthemes/ssh-deploy@v2.2.3
         with:
-          server: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASS }}
+          server: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          password: ${{ secrets.SSH_PRIVATE_KEY }}
           local_path: ./dist/my-app/
           server_path: /var/www/html/
           
