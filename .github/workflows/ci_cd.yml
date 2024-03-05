@@ -1,32 +1,38 @@
-name: CI/CD Pipeline for Angular App
+name: CI/CD Pipeline
 
 on:
   push:
     branches: ["master"]
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3 
-      - name: Use Node.js 18
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
+
       - name: Install dependencies
         run: npm install
-      - name: Build Angular app
-        run: ng build --prod
-      - name: Archive build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: built-angular-app
-          path: dist/
 
-      - uses: jakejarvis/deploy-from-github-actions@v1 
-        env:
-          SERVER_URL: 143.198.216.248 
-          SERVER_USERNAME: root 
-          SERVER_PASSWORD: SAfwan@1234s 
-          NGINX_CONFIG_PATH: /etc/nginx/nginx.conf
+      - name: Build
+        run: npm run build --prod
+
+      - name: Deploy to Nginx server
+        uses: easingthemes/ssh-deploy@v2.2.3
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PASS }}
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_USER: ${{ secrets.SSH_USER }}
+          REMOTE_PORT: 22
+          SOURCE: ./dist/my-app/
+          TARGET: /var/www/html/
+          ARGS: "-rltgoDzvO -o StrictHostKeyChecking=no"
+
+      - name: Restart Nginx
+        run: ssh root@143.198.216.248 "sudo systemctl restart nginx"
