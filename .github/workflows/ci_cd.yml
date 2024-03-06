@@ -31,7 +31,7 @@ jobs:
           REMOTE_USER: ${{ secrets.SSH_USER }}
           REMOTE_PORT: 22
           SOURCE: ./dist/my-app/
-          TARGET: /var/www/html/
+          TARGET: /home/runner/my-app
           ARGS: "-rltgoDzvO -o StrictHostKeyChecking=no"
 
       - name: Restart Nginx
