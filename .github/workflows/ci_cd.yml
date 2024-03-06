@@ -23,16 +23,16 @@ jobs:
       - name: Build
         run: npm run build --prod
 
-      - name: Deploy to Nginx server
-        uses: easingthemes/ssh-deploy@v2.2.3
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PASS }}
-          REMOTE_HOST: ${{ secrets.SSH_HOST }}
-          REMOTE_USER: ${{ secrets.SSH_USER }}
-          REMOTE_PORT: 22
-          SOURCE: ./dist/my-app/
-          TARGET: /home/runner/
-          ARGS: "-rltgoDzvO -o StrictHostKeyChecking=no"
+- name: Deploy to Nginx server
+  uses: easingthemes/ssh-deploy@v2.2.3
+  with:
+    SSH_PRIVATE_KEY: ${{ secrets.SSH_PASS }}
+    REMOTE_HOST: ${{ secrets.SSH_HOST }}
+    REMOTE_USER: ${{ secrets.SSH_USER }}
+    REMOTE_PORT: 22
+    SOURCE: ./dist/my-app/ 
+    TARGET: /home/runner/my-app
+    ARGS: "-rltgoDzvO -o StrictHostKeyChecking=no"
 
-      - name: Restart Nginx
-        run: ssh root@143.198.216.248 "sudo systemctl restart nginx"
+- name: Restart Nginx (if necessary)
+  run: ssh root@143.198.216.248 "sudo systemctl restart nginx" 
