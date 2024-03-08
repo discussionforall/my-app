@@ -1,0 +1,26 @@
+stages:
+    - build
+    - deploy
+  
+  build:
+    stage: build
+    image: node:latest
+    script:
+      - npm install
+      - npm run build -- --output-path=./dist/out
+  
+  deploy:
+    stage: deploy
+    image: docker:latest
+    services:
+      - docker:dind
+    variables:
+      DOCKER_HOST: tcp://docker:2375
+      DOCKER_TLS_CERTDIR: ""
+    before_script:
+      - docker login -u root -p "$DOCKER_PASSWORD" 143.198.216.248
+    script:
+      - docker build -t angular-nginx .
+      - docker tag angular-nginx 143.198.216.248/angular-nginx
+      - docker push 143.198.216.248/angular-nginx
+  
