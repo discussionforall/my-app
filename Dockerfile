@@ -3,7 +3,7 @@ FROM node:latest AS build
 WORKDIR /
 COPY . .
 RUN npm install
-RUN npm run build -- --output-path=./dist
+RUN npm run build -- --output-path= /dist
 
 # Stage 2: Serve Angular app using Nginx
 FROM nginx:latest
